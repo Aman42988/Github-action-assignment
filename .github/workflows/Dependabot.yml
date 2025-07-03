@@ -16,6 +16,8 @@ jobs:
         with:
           node-version: '20'
       - name: Update dependencies
+        with:
+          github-token: ${{ secrets.GIT_TOKEN }}
         run: |
           npm install -g npm-check-updates
           ncu -u
@@ -23,6 +25,7 @@ jobs:
       - name: Create Pull Request
         uses: peter-evans/create-pull-request@v7
         with:
+          github-token: ${{ secrets.GIT_TOKEN }}
           commit-message: 'chore: update dependencies'
           title: 'Automated Dependency Updates'
           body: 'This PR contains automated dependency updates.'
