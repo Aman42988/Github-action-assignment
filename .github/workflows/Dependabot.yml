@@ -2,8 +2,8 @@ name: Dependency Updates
 
 on:
   schedule:
-    - cron: '0 0 * * 1' # Run weekly on Monday at midnight
-  workflow_dispatch: # Allow manual triggering
+    - cron: '0 0 * * 1' 
+  workflow_dispatch: 
 
 jobs:
   update-dependencies:
@@ -11,26 +11,15 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-      - name: List Directory
-        run: ls -la
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '18'
-          cache: 'npm'
-      - name: Verify Node.js version
-        run: node --version && npm --version
-      - name: Install ESLint dependencies
-        run: npm install --save-dev eslint vite-plugin-eslint eslint-plugin-react eslint-plugin-react-hooks eslint-plugin-react-refresh
-      - name: Install project dependencies
-        run: npm install
+          node-version: '20'
       - name: Update dependencies
         run: |
           npm install -g npm-check-updates
           ncu -u
           npm install
-      - name: Run tests
-        run: npm test
       - name: Create Pull Request
         uses: peter-evans/create-pull-request@v7
         with:
@@ -39,4 +28,4 @@ jobs:
           title: 'Automated Dependency Updates'
           body: 'This PR contains automated dependency updates.'
           branch: 'dependency-updates'
-          delete-branch: true
+          delete-branch: true 
