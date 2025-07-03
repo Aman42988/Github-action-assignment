@@ -1,0 +1,29 @@
+name: Dependency Updates
+
+on:
+  schedule:
+    - cron: '0 0 * * 1' 
+  workflow_dispatch: 
+
+jobs:
+  update-dependencies:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - name: Update dependencies
+        run: |
+          npm install -g npm-check-updates
+          ncu -u
+          npm install
+      - name: Create Pull Request
+        uses: peter-evans/create-pull-request@v7
+        with:
+          commit-message: 'chore: update dependencies'
+          title: 'Automated Dependency Updates'
+          body: 'This PR contains automated dependency updates.'
+          branch: 'dependency-updates'
