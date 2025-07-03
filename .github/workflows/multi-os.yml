@@ -4,7 +4,6 @@ on:
   push:
     branches:
       - main
-      - feature
   pull_request:
     branches:
       - main
@@ -15,14 +14,28 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-latest, windows-latest, macos-latest]
+      fail-fast: false
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
+
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '20'
+          node-version: '20.x'
+          cache: 'npm'
+
+      - name: Configure Git for Windows
+        if: matrix.os == 'windows-latest'
+        run: |
+          git config --global core.autocrlf true
+          git config --global core.longpaths true
+
       - name: Install dependencies
-        run: npm install
+        run: npm ci
+
+      - name: Run linter
+        run: npm run lint
+
       - name: Run tests
         run: npm test
