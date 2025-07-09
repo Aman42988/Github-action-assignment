@@ -1,26 +1,49 @@
-name: Run NPM Tests
+name: NPM Test and Deploy
 
 on:
-  workflow_dispatch:
-  pull_request:
-    branches:
-      - main
+  workflow_call:
+    inputs:
+      environment:
+        required: true
+        type: string
+      timeout_minutes:
+        required: false
+        type: number
+        default: 15
+    secrets:
+      GIT_TOKEN:
+        required: true
 
 jobs:
-  test:
+  test-and-deploy:
     runs-on: ubuntu-latest
+    environment: ${{ inputs.environment }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
+
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
           node-version: '20'
+
       - name: Install dependencies
-        run: npm install
+        run: npm ci
+
       - name: Run tests
         run: npm test
-      - name: Build 
+
+      - name: Build application
         env:
-          DEPLOY_TOKEN: ${{ secrets.GIT_TOKEN }}
+          GIT_TOKEN: ${{ secrets.GIT_TOKEN }}
+        run: npm run build -- --env ${{ inputs.environment }}
+
+      - name: Deploy to ${{ inputs.environment }}
+        env:
+          GIT_TOKEN: ${{ secrets.GIT_TOKEN }}
         run: npm run build
+
+      - name: Wait for deployment
+        timeout-minutes: ${{ inputs.timeout_minutes }}
+        run: |
+          echo "Waiting for deployment to complete..."

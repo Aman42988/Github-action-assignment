@@ -20,5 +20,6 @@ jobs:
         uses: ./.github/workflows/npm-test.yml
         with:
           environment: ${{ github.event.inputs.environment }}
+          timeout_minutes: ${{ github.event.inputs.environment == 'prod' && 30 || 15 }}
         secrets:
-          DEPLOY_TOKEN: ${{ secrets[format('{0}_GIT_TOKEN', github.event.inputs.environment)] }}
+          GIT_TOKEN: ${{ secrets[format('{0}_GIT_TOKEN', github.event.inputs.environment)] }}
