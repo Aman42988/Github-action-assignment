@@ -16,6 +16,8 @@ jobs:
   initiate-deployment:
     runs-on: ubuntu-latest
     steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
       - name: Trigger Deployment Workflow
         uses: ./.github/workflows/npm-test.yml
         with:
