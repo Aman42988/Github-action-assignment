@@ -1,6 +1,7 @@
 name: Run NPM Tests
 
 on:
+  workflow_dispatch:
   pull_request:
     branches:
       - main
