@@ -1,0 +1,24 @@
+name: Main Deployment Workflow
+
+on:
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: 'Target environment (dev, staging, prod)'
+        required: true
+        type: choice
+        options:
+          - dev
+          - staging
+          - prod
+
+jobs:
+  initiate-deployment:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Trigger Deployment Workflow
+        uses: ./.github/workflows/npm-test.yml
+        with:
+          environment: ${{ github.event.inputs.environment }}
+        secrets:
+          DEPLOY_TOKEN: ${{ secrets[format('{0}_DEPLOY_TOKEN', github.event.inputs.environment)] }}
