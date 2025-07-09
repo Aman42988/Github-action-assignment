@@ -21,4 +21,4 @@ jobs:
         with:
           environment: ${{ github.event.inputs.environment }}
         secrets:
-          DEPLOY_TOKEN: ${{ secrets[format('{0}_DEPLOY_TOKEN', github.event.inputs.environment)] }}
+          DEPLOY_TOKEN: ${{ secrets[format('{0}_GIT_TOKEN', github.event.inputs.environment)] }}

@@ -21,4 +21,6 @@ jobs:
       - name: Run tests
         run: npm test
       - name: Build 
+        env:
+          DEPLOY_TOKEN: ${{ secrets.GIT_TOKEN }}
         run: npm run build
