@@ -10,9 +10,6 @@ on:
         required: false
         type: number
         default: 15
-    secrets:
-      GIT_TOKEN:
-        required: true
 
 jobs:
   test-and-deploy:
@@ -34,13 +31,9 @@ jobs:
         run: npm test
 
       - name: Build application
-        env:
-          GIT_TOKEN: ${{ secrets.GIT_TOKEN }}
         run: npm run build -- --env ${{ inputs.environment }}
 
       - name: Deploy to ${{ inputs.environment }}
-        env:
-          GIT_TOKEN: ${{ secrets.GIT_TOKEN }}
         run: npm run build
 
       - name: Wait for deployment
